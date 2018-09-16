@@ -94,9 +94,9 @@ module.exports = {
                 '.jsx',
             ],
             alias: {
-                "react": "preact-compat",
-                "react-dom": "preact-compat",
-                "react-context": "preact-context"
+                // "react": "preact-compat",
+                // "react-dom": "preact-compat",
+                // "react-context": "preact-context"
             },
             plugins: [
                 // Prevents users from importing files from outside of src/ (or node_modules/).

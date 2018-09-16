@@ -1,12 +1,12 @@
 
 .app {
 
-    &[gameover="lost"]>.board {
-        outline: 3px solid red;
+    &[gamestate="lost"]>.board {
+        border-color: red;
     }
 
-    &[gameover="win"]>.board {
-        outline: 3px solid green;
+    &[gamestate="won"]>.board {
+        border-color: rgb(0, 210, 0);
     }
 }
 
@@ -14,6 +14,7 @@
     --edgeX: 0;
     --edgeY: 0;
 
+    border: 4px solid #9e9e9e;
     background-color: #9e9e9e;
     margin: 50px;
     display: inline-grid;
@@ -49,12 +50,13 @@
             color: red;
         }
     }
-
-
-    // color: ${props => adjacencyColors[props.adjacentBombs]};
-    // ${props => !props.revealed && `
-        
 }
+
+$gameStateButtonText: (
+    "running": "reset",
+    "won": "new game",
+    "lost": "try again"
+);
 
 $adjacencyColors: (
     "0": transparent,
@@ -71,6 +73,10 @@ $adjacencyColors: (
 @for $i from 1 through 100 {
     [edgex="#{$i}"] {--edgeX: #{$i};}
     [edgey="#{$i}"] {--edgeY: #{$i};}
+}
+
+@each $state, $text in $gameStateButtonText {
+    .app[gamestate=#{$state}]>button>span:after { content: $text }
 }
 
 @each $i, $color in $adjacencyColors {

@@ -1,44 +1,29 @@
 import { h, Component } from 'preact';
-import { Board } from './components/Board';
-import { constructArray2D, neighbouringIndexes } from './tools/Array2D';
-import { range } from './tools/array';
+import { Minesweeper } from './components/Minesweeper';
 import './App.scss';
-
-const edgeX = 5;
-const edgeY = 6;
-const bombs = 3;
-const xs = constructArray2D(edgeX, edgeY, false);
-const indexes = range(0)(xs.length);
-
-const bombed = shuffle([].concat(indexes)).slice(0, bombs);
 
 class App extends Component {
 
     state = {
-        indexes: 
-        bombed: bombed as any[],
-        revealed: [] as any[],
-        flagged: [] as any[],
-        gameState: 'running'
+        gameState: 'running',
+        edgeX: 5,
+        edgeY: 6,
+        bombs: 2,
     }
 
     render() {
-        console.log(this.props.children);
-
         return (
             <div
                 class="app"
                 gameState={this.state.gameState}
             >
-                <Board
+                <Minesweeper
                     active={this.state.gameState === 'running'}
-                    bombRevealed={() => this.gameState = 'lost'}
-                    cleared={() => this.gameState = 'win'}
-                    bombed={this.state.bombed}
-                    revealed={this.state.revealed}
-                    flagged={this.state.flagged}
-                ></Board>
-                <button onClick={() => this.gameState = 'running'}>start</button>
+                    lost={() => this.gameState = 'lost'}
+                    won={() => this.gameState = 'won'}
+                    {...this.state}
+                ></Minesweeper>
+                <button onClick={() => this.gameState = 'running'}><span></span></button>
                 {/* <ConfigurationModal minefield={this.state.minefield}></ConfigurationModal> */}
             </div>
         );

@@ -1,28 +1,4 @@
-export const constructArray2D = (edgeX, edgeY, fill?) => {
-    const items = Array(edgeX * edgeY).fill(fill);
-
-    return decorate(edgeX, edgeY, items);
-}
-
-const decorate = (edgeX, edgeY, items) => {
-    const _items = [].concat(items);
-
-    Reflect.defineProperty(items, 'edgeX', {
-        value: edgeX
-    });
-
-    Reflect.defineProperty(items, 'edgeY', {
-        value: edgeY
-    });
-
-    Reflect.defineProperty(items, 'map', {
-        value: f => decorate(edgeX, edgeY, _items.map(f))
-    });
-
-    return items;
-}
-
-const neigbouringCoords = xs => ([x, y]) => [
+const neigbouringCoords = edgeX => edgeY => ([x, y]) => [
     [x + 1, y],
     [x + 1, y + 1],
     [x + 1, y - 1],
@@ -34,27 +10,27 @@ const neigbouringCoords = xs => ([x, y]) => [
     [x, y + 1],
     [x, y - 1],
     //@ts-ignore
-].filter(c => isCoordValid(xs)(c));
+].filter(c => isCoordValid(edgeX)(edgeY)(c));
 
-const isCoordValid = xs => ([x, y]) => {
-    return x > -1 && x < xs.edgeX && y > -1 && y < xs.edgeY;
+const isCoordValid = edgeX => edgeY => ([x, y]) => {
+    return x > -1 && x < edgeX && y > -1 && y < edgeY;
 }
 
-const indexToCoord = xs => ix => {
-    const x = ix % xs.edgeX;
-    const y = Math.floor(ix / xs.edgeX);
+const indexToCoord = edgeX => ix => {
+    const x = ix % edgeX;
+    const y = Math.floor(ix / edgeX);
 
     return [x, y] as [number, number];
 }
 
-const coordToIndex = xs => ([x, y]) => {
-    return xs.edgeX * y + x;
+const coordToIndex = edgeX => ([x, y]) => {
+    return edgeX * y + x;
 }
 
-export const neighbouringIndexes = xs => ix => {
-    const c = indexToCoord(xs)(ix);
-    const cs = neigbouringCoords(xs)(c);
-    const indexes = cs.map(coordToIndex(xs));
+export const neighbouringIndexes = edgeX => edgeY => ix => {
+    const c = indexToCoord(edgeX)(ix);
+    const cs = neigbouringCoords(edgeX)(edgeY)(c);
+    const indexes = cs.map(coordToIndex(edgeX));
 
     return indexes;
 }

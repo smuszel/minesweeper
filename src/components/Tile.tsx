@@ -23,8 +23,16 @@ export class Tile extends Component<any, any> {
                 revealed={this.props.revealed}
                 hasBomb={this.props.hasBomb}
             ><span
-                adjacentBombs={this.props.adjacentBombs}
+                adjacentBombs={this.adjacentBombs}
             ></span></div>
         )
+    }
+
+    get adjacentBombs() {
+        return this.props.getAdjacentBombs();
+    }
+
+    get neighbours() {
+        return this.props.getNeighbours();
     }
 }
