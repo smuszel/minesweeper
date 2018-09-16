@@ -13,7 +13,6 @@
         "moduleResolution": "node",
         "rootDir": "src",
         "forceConsistentCasingInFileNames": true,
-        "noImplicitThis": true,
         "strictNullChecks": true,
         "suppressImplicitAnyIndexErrors": true,
         "typeRoots": [

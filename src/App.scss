@@ -1,0 +1,78 @@
+
+.app {
+
+    &[gameover="lost"]>.board {
+        outline: 3px solid red;
+    }
+
+    &[gameover="win"]>.board {
+        outline: 3px solid green;
+    }
+}
+
+.board {
+    --edgeX: 0;
+    --edgeY: 0;
+
+    background-color: #9e9e9e;
+    margin: 50px;
+    display: inline-grid;
+    grid-template-columns: repeat(var(--edgeX), 25px);
+    grid-template-rows: repeat(var(--edgeY), 25px);
+    grid-gap: 2px;
+}
+
+
+.tile {
+    transition: 300ms;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    box-shadow: inset 2px 2px 1px 2px #f5f5f5, inset -2px -2px 1px 2px #d0d0d0;
+    background-color: #e2e2e2;
+
+    &[flagged]>span:after {
+        content: "F";
+    }
+
+    &[revealed] {
+        background-color: #d4d4d4;
+        box-shadow: none;
+
+        span:after {
+            content: attr(adjacentbombs);
+        }
+
+        &[hasbomb]>span:after {
+            content: "B";
+            color: red;
+        }
+    }
+
+
+    // color: ${props => adjacencyColors[props.adjacentBombs]};
+    // ${props => !props.revealed && `
+        
+}
+
+$adjacencyColors: (
+    "0": transparent,
+    "1": blue, 
+    "2": green,
+    "3": red,
+    "4": navy,
+    "5": yellow,
+    "6": yellow,
+    "7": yellow,
+    "8": yellow
+);
+    
+@for $i from 1 through 100 {
+    [edgex="#{$i}"] {--edgeX: #{$i};}
+    [edgey="#{$i}"] {--edgeY: #{$i};}
+}
+
+@each $i, $color in $adjacencyColors {
+    .tile[revealed]:not([hasbomb])>span[adjacentbombs="#{$i}"]:after {color: $color}
+}

@@ -1,33 +1,54 @@
 import { h, Component } from 'preact';
-import { ConfigurationModal } from './components/ConfigurationModal';
+import { Board } from './components/Board';
+import { constructArray2D, neighbouringIndexes } from './tools/Array2D';
+import { range } from './tools/array';
 import './App.scss';
-import { Array2D } from './tools/Array2D';
-import { uniquelyRepeatedMap } from './tools/random';
-import { Minesweeper } from './components/Minesweeper';
 
-const defEdge = 4
-const bombs = 5;
-const xs = new Array2D<boolean>(defEdge, defEdge);
+const edgeX = 5;
+const edgeY = 6;
+const bombs = 3;
+const xs = constructArray2D(edgeX, edgeY, false);
+const indexes = range(0)(xs.length);
 
-xs.items = xs.items.map(_ => false);
-xs.items = uniquelyRepeatedMap(x => true)(xs.items)(bombs);
-console.log(xs);
+const bombed = shuffle([].concat(indexes)).slice(0, bombs);
 
 class App extends Component {
 
     state = {
-        minefield: xs
+        indexes: 
+        bombed: bombed as any[],
+        revealed: [] as any[],
+        flagged: [] as any[],
+        gameState: 'running'
     }
 
     render() {
-        console.log(this.state);
-        
+        console.log(this.props.children);
+
         return (
-            <div>
-                <Minesweeper minefield={this.state.minefield}></Minesweeper>
+            <div
+                class="app"
+                gameState={this.state.gameState}
+            >
+                <Board
+                    active={this.state.gameState === 'running'}
+                    bombRevealed={() => this.gameState = 'lost'}
+                    cleared={() => this.gameState = 'win'}
+                    bombed={this.state.bombed}
+                    revealed={this.state.revealed}
+                    flagged={this.state.flagged}
+                ></Board>
+                <button onClick={() => this.gameState = 'running'}>start</button>
                 {/* <ConfigurationModal minefield={this.state.minefield}></ConfigurationModal> */}
             </div>
         );
+    }
+
+    set gameState(gameState) {
+        this.setState({
+            ...this.state,
+            gameState
+        });
     }
 }
     

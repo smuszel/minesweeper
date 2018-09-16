@@ -1,41 +1,28 @@
-export class Array2D<T> {
-    items: T[];
-    edgeX: number;
-    edgeY: number;
+export const constructArray2D = (edgeX, edgeY, fill?) => {
+    const items = Array(edgeX * edgeY).fill(fill);
 
-    constructor(
-        edgeX: number,
-        edgeY: number
-    ) {
-        this.edgeX = edgeX;
-        this.edgeY = edgeY;
-        //@ts-ignore
-        this.items = Array(edgeX * edgeY).fill(null);
-    }
-
-    lift() {
-        //@ts-ignore
-        const arr = [] as [T[]];
-
-        this.items.reduce((a, x) => {
-            if (a.length === this.edgeX - 1) {
-                arr.push([...a, x]);
-
-                return [];
-            } else {
-                return [...a, x];
-            }
-        }, []);
-
-        return arr;
-    }
-
-    [Symbol.iterator]() {
-        return this.items;
-    }
+    return decorate(edgeX, edgeY, items);
 }
 
-const neigbouringCoords = ([x, y]: Coords) => [
+const decorate = (edgeX, edgeY, items) => {
+    const _items = [].concat(items);
+
+    Reflect.defineProperty(items, 'edgeX', {
+        value: edgeX
+    });
+
+    Reflect.defineProperty(items, 'edgeY', {
+        value: edgeY
+    });
+
+    Reflect.defineProperty(items, 'map', {
+        value: f => decorate(edgeX, edgeY, _items.map(f))
+    });
+
+    return items;
+}
+
+const neigbouringCoords = xs => ([x, y]) => [
     [x + 1, y],
     [x + 1, y + 1],
     [x + 1, y - 1],
@@ -46,19 +33,28 @@ const neigbouringCoords = ([x, y]: Coords) => [
 
     [x, y + 1],
     [x, y - 1],
-];
+    //@ts-ignore
+].filter(c => isCoordValid(xs)(c));
 
-export const index = <T>(xs: Array2D<T>) => ([x, y]: Coords) => {
-    const coordsInside = exists(xs)([x, y]);
-
-    if (coordsInside) {
-        return xs.items[x + y * xs.edgeX];
-    }
-}
-
-export const exists = <T>(xs: Array2D<T>) => ([x, y]: Coords) => {
+const isCoordValid = xs => ([x, y]) => {
     return x > -1 && x < xs.edgeX && y > -1 && y < xs.edgeY;
 }
 
-export const neighbours = <T>(xs: Array2D<T>) => (c: Coords) =>
-    neigbouringCoords(c).map(index(xs)).filter(x => x !== undefined);
+const indexToCoord = xs => ix => {
+    const x = ix % xs.edgeX;
+    const y = Math.floor(ix / xs.edgeX);
+
+    return [x, y] as [number, number];
+}
+
+const coordToIndex = xs => ([x, y]) => {
+    return xs.edgeX * y + x;
+}
+
+export const neighbouringIndexes = xs => ix => {
+    const c = indexToCoord(xs)(ix);
+    const cs = neigbouringCoords(xs)(c);
+    const indexes = cs.map(coordToIndex(xs));
+
+    return indexes;
+}

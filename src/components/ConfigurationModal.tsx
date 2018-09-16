@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 
-export class ConfigurationModal extends Component<{ minefield: string }, any> {
+export class ConfigurationModal extends Component<any, any> {
     
     render() {
         console.log(this.props);
