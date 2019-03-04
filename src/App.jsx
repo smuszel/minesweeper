@@ -24,7 +24,6 @@ class App extends Component {
                     {...this.state}
                 ></Minesweeper>
                 <button onClick={() => this.gameState = 'running'}><span></span></button>
-                {/* <ConfigurationModal minefield={this.state.minefield}></ConfigurationModal> */}
             </div>
         );
     }

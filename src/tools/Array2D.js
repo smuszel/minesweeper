@@ -9,7 +9,6 @@ const neigbouringCoords = edgeX => edgeY => ([x, y]) => [
 
     [x, y + 1],
     [x, y - 1],
-    //@ts-ignore
 ].filter(c => isCoordValid(edgeX)(edgeY)(c));
 
 const isCoordValid = edgeX => edgeY => ([x, y]) => {
@@ -20,7 +19,7 @@ const indexToCoord = edgeX => ix => {
     const x = ix % edgeX;
     const y = Math.floor(ix / edgeX);
 
-    return [x, y] as [number, number];
+    return [x, y];
 }
 
 const coordToIndex = edgeX => ([x, y]) => {

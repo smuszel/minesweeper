@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
 
-export class Tile extends Component<any, any> {
+export class Tile extends Component {
     
     handle = ev => {
         if (this.props.active) {

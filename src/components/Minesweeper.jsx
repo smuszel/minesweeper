@@ -4,14 +4,14 @@ import { Tile } from './Tile';
 import { toggle, range } from '../tools/array';
 import { shuffle } from '../tools/random';
 
-export class Minesweeper extends Component<any, any> {
+export class Minesweeper extends Component {
 
-    revealBatch = [] as any;
+    revealBatch = [];
 
     initializeState = () => ({
         bombed: shuffle(this.indexes).slice(0, this.props.bombs),
-        revealed: [] as any[],
-        flagged: [] as any[]
+        revealed: [],
+        flagged: []
     })
 
     state = this.initializeState();

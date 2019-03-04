@@ -1,6 +1,6 @@
 import { range } from './array';
 
-export const shuffle = (xs: any[]) => {
+export const shuffle = (xs) => {
     for (let i = xs.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [xs[i], xs[j]] = [xs[j], xs[i]];
@@ -9,15 +9,11 @@ export const shuffle = (xs: any[]) => {
     return xs;
 }
 
-const index = (xs: any[]) => {
-    return Math.floor(Math.random() * (xs.length));
-}
-
-const uniqueIndexes = (len) => (n: number) => {
+const uniqueIndexes = (len) => (n) => {
     return shuffle(range(0)(len)).slice(0, n);
 }
 
-export const uniquelyRepeatedMap = f => xs => (n: number) => {
+export const uniquelyRepeatedMap = f => xs => (n) => {
     const ixs = uniqueIndexes(xs.length)(n);
 
     return xs.map((x, ix) => ixs.includes(ix) ? f(x) : x);
